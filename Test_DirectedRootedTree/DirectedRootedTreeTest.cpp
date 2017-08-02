@@ -41,6 +41,12 @@ private Q_SLOTS:
     void iterator_postfix_inc_data();
     void iterator_postfix_inc();
 
+    void equal_data();
+    void equal();
+
+    void not_equal_data();
+    void not_equal();
+
     void remove_node();
 
     void algo_top_leaves();
@@ -291,6 +297,96 @@ void DirectedRootedTreeTest::iterator_postfix_inc()
             QCOMPARE(iter, tree.end());
         }
     }
+}
+
+void DirectedRootedTreeTest::equal_data()
+{
+    QTest::addColumn< std::vector<int> >("left_tree_data");
+    QTest::addColumn< std::vector<int> >("right_tree_data");
+
+    QTest::newRow("0") << std::vector<int>() << std::vector<int>();
+    QTest::newRow("1") << std::vector<int>({1}) << std::vector<int>({1});
+    QTest::newRow("2") << std::vector<int>({2, 2}) << std::vector<int>({2, 2});
+    QTest::newRow("3") << std::vector<int>({3, 3, 3}) << std::vector<int>({3, 3, 3});
+    QTest::newRow("4") << std::vector<int>({4, 4, 4, 4}) << std::vector<int>({4, 4, 4, 4});
+}
+
+void DirectedRootedTreeTest::equal()
+{
+    QFETCH(std::vector<int>, left_tree_data);
+    QFETCH(std::vector<int>, right_tree_data);
+
+    if (left_tree_data != right_tree_data)
+    {
+        QFAIL("data vectors must be equal");
+    }
+
+    DirectedRootedTree<int> left_tree;
+    DirectedRootedTree<int> right_tree;
+
+    if (!left_tree_data.empty())
+    {
+        left_tree.root()->value() = left_tree_data.front();
+    }
+    if (!right_tree_data.empty())
+    {
+        right_tree.root()->value() = right_tree_data.front();
+    }
+
+    for (size_t i = 1; i < left_tree_data.size(); ++i)
+    {
+        left_tree.add_child(left_tree.root(), left_tree_data[i]);
+        right_tree.add_child(right_tree.root(), right_tree_data[i]);
+    }
+
+    QVERIFY(left_tree == right_tree);
+}
+
+void DirectedRootedTreeTest::not_equal_data()
+{
+    QTest::addColumn< std::vector<int> >("left_tree_data");
+    QTest::addColumn< std::vector<int> >("right_tree_data");
+
+    QTest::newRow("0") << std::vector<int>() << std::vector<int>({1});
+    QTest::newRow("1") << std::vector<int>({1}) << std::vector<int>({2});
+    QTest::newRow("2") << std::vector<int>({2, 2}) << std::vector<int>({2, 2, 2});
+    QTest::newRow("3") << std::vector<int>({3, 4, 3}) << std::vector<int>({3, 3});
+    QTest::newRow("4") << std::vector<int>({4, 4, 4, 4, 5}) << std::vector<int>({4, 4, 4, 4});
+}
+
+void DirectedRootedTreeTest::not_equal()
+{
+    QFETCH(std::vector<int>, left_tree_data);
+    QFETCH(std::vector<int>, right_tree_data);
+
+    if (left_tree_data == right_tree_data)
+    {
+        QFAIL("data vectors must not be equal");
+    }
+
+    DirectedRootedTree<int> left_tree;
+    DirectedRootedTree<int> right_tree;
+
+    if (!left_tree_data.empty())
+    {
+        left_tree.root()->value() = left_tree_data.front();
+    }
+    if (!right_tree_data.empty())
+    {
+        right_tree.root()->value() = right_tree_data.front();
+    }
+
+    for (size_t i = 1; i < left_tree_data.size(); ++i)
+    {
+        left_tree.add_child(left_tree.root(), left_tree_data[i]);
+    }
+
+    for (size_t i = 1; i < right_tree_data.size(); ++i)
+    {
+        right_tree.add_child(right_tree.root(), right_tree_data[i]);
+    }
+
+    QVERIFY(left_tree != right_tree);
 }
 
 void DirectedRootedTreeTest::remove_node()

@@ -11,6 +11,18 @@ class DirectedRootedTree
 {
     // TODO: Make this class copyable if T is copyable or clonable if T is movable and clonable but not copyable
 
+    // TODO: make parameters const references
+    friend bool operator==(DirectedRootedTree& left, DirectedRootedTree& right)
+    {
+        return equal(left, right);
+    }
+
+    // TODO: make parameters const references
+    friend bool operator!=(DirectedRootedTree& left, DirectedRootedTree& right)
+    {
+        return !equal(left, right);
+    }
+
 public:
     class TreeNode;
 
@@ -25,13 +37,15 @@ public:
         T& value();
 
         const TreeNode* parent() const;
+        TreeNode* parent();
+
         const node_children_t& children() const;
 
     private:
         explicit TreeNode(const T& value, TreeNode* parent = nullptr);
         explicit TreeNode(T&& value, TreeNode* parent = nullptr);
 
-        void add_child(std::unique_ptr<TreeNode>&& child);
+        TreeNode* add_child(std::unique_ptr<TreeNode>&& child);
 
     private:
         T m_value;
@@ -73,7 +87,10 @@ public:
     };
 
 public:
+    // TODO: make parameters const references
+    static bool equal(DirectedRootedTree& left, DirectedRootedTree& right);
 
+public:
     explicit DirectedRootedTree(const T& value);
     explicit DirectedRootedTree(T&& root_value = T());
 
@@ -83,8 +100,8 @@ public:
     Iterator begin();
     Iterator end();
 
-    void add_child(TreeNode* parent, const T& value);
-    void add_child(TreeNode* parent, T&& value);
+    TreeNode* add_child(TreeNode* parent, const T& value);
+    TreeNode* add_child(TreeNode* parent, T&& value);
     void remove_node(TreeNode* node);
 
     size_t size() const;

@@ -22,6 +22,12 @@ const typename DirectedRootedTree<T>::TreeNode* DirectedRootedTree<T>::TreeNode:
 }
 
 template <typename T>
+typename DirectedRootedTree<T>::TreeNode* DirectedRootedTree<T>::TreeNode::parent()
+{
+    return m_parent;
+}
+
+template <typename T>
 const typename DirectedRootedTree<T>::node_children_t& DirectedRootedTree<T>::TreeNode::children() const
 {
     return m_children;
@@ -44,9 +50,10 @@ DirectedRootedTree<T>::TreeNode::TreeNode(T&& value, TreeNode* parent)
 }
 
 template <typename T>
-void DirectedRootedTree<T>::TreeNode::add_child(std::unique_ptr<TreeNode>&& child)
+typename DirectedRootedTree<T>::TreeNode* DirectedRootedTree<T>::TreeNode::add_child(std::unique_ptr<TreeNode>&& child)
 {
     m_children.emplace_back(std::move(child));
+    return m_children.back().get();
 }
 
 #endif // TREENODEIMPL_H

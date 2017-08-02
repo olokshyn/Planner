@@ -8,6 +8,17 @@
 #include <stdexcept>
 
 template <typename T>
+bool DirectedRootedTree<T>::equal(DirectedRootedTree<T>& left,
+                                  DirectedRootedTree<T>& right)
+{
+    if (left.size() != right.size())
+    {
+        return false;
+    }
+    return std::equal(left.begin(), left.end(), right.begin());
+}
+
+template <typename T>
 DirectedRootedTree<T>::DirectedRootedTree(const T& value)
     : m_root(new TreeNode(value, nullptr)),
       m_size(1)
@@ -48,17 +59,19 @@ typename DirectedRootedTree<T>::Iterator DirectedRootedTree<T>::end()
 }
 
 template <typename T>
-void DirectedRootedTree<T>::add_child(TreeNode* parent, const T& value)
+typename DirectedRootedTree<T>::TreeNode* DirectedRootedTree<T>::add_child(TreeNode* parent, const T& value)
 {
-    parent->add_child(std::unique_ptr<TreeNode>(new TreeNode(value, parent)));
+    TreeNode* child = parent->add_child(std::unique_ptr<TreeNode>(new TreeNode(value, parent)));
     ++m_size;
+    return child;
 }
 
 template <typename T>
-void DirectedRootedTree<T>::add_child(TreeNode* parent, T&& value)
+typename DirectedRootedTree<T>::TreeNode* DirectedRootedTree<T>::add_child(TreeNode* parent, T&& value)
 {
-    parent->add_child(std::unique_ptr<TreeNode>(new TreeNode(value, parent)));
+    TreeNode* child = parent->add_child(std::unique_ptr<TreeNode>(new TreeNode(std::move(value), parent)));
     ++m_size;
+    return child;
 }
 
 template <typename T>
