@@ -8,7 +8,10 @@ TEMPLATE = subdirs
 SUBDIRS = DirectedRootedTree \
     Test_DirectedRootedTree \
     TreeSerialization \
-    Test_TreeSerialization
+    Test_TreeSerialization \
+    SequencingModel \
+    SequencingModelTest
 
 Test_DirectedRootedTree.depends = DirectedRootedTree
 Test_TreeSerialization.depends = TreeSerialization
+SequencingModelTest.depends = SequencingModel
